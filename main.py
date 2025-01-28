@@ -5,10 +5,10 @@ import matplotlib.pyplot as plt
 import math as m
 import random
 
-nb_nodes = 20
+nb_nodes = 40
 rho0 = 0.3
 alpha = 0.15
-n_iterations = 100
+n_iterations = 1000
 p = 0.1 
 
 J = np.full((nb_nodes, nb_nodes), -1)
@@ -30,30 +30,37 @@ triangles = g.cliques(min=3, max=3)
 Hs = {}
 Hp = {}
 
-def calculate_Hs_Hp():
+def calculate_Hs_Hp(i,j):
     for triangle in triangles:
-        i, j, k = triangle
-        Hs[tuple(triangle)] = J[i, j] * J[j, k] * J[k, i]
-        Hp[tuple(triangle)] = -(
-            (S[i] * S[j])**((3 - J[i, j])/2) * (S[j] * S[k])**((3 - J[j, k])/2) +
-            (S[j] * S[k])**((3 - J[j, k])/2) * (S[k] * S[i])**((3 - J[k, i])/2) +
-            (S[k] * S[i])**((3 - J[k, i])/2) * (S[i] * S[j])**((3 - J[j, i])/2) - 1
-        ) / 2
+        if i in triangle and j in triangle:
+            i_temp, j_temp, k = triangle
+            Hs[tuple(triangle)] = J[i_temp, j_temp] * J[j_temp, k] * J[k, i_temp]
+            Hp[tuple(triangle)] = -(
+                (S[i_temp] * S[j_temp])**((3 - J[i_temp, j_temp])/2) * (S[j_temp] * S[k])**((3 - J[j_temp, k])/2) +
+                (S[j_temp] * S[k])**((3 - J[j_temp, k])/2) * (S[k] * S[i_temp])**((3 - J[k, i_temp])/2) +
+                (S[k] * S[i_temp])**((3 - J[k, i_temp])/2) * (S[i_temp] * S[j_temp])**((3 - J[j_temp, i_temp])/2) - 1
+            ) / 2
 
 def calculate_H():
     return -(1 / m.comb(nb_nodes, 3)) * sum(
         Hp[triangle] * (Hs[triangle] - 1) - (Hs[triangle] + 1) for triangle in triangles
     ) / 2
 
-calculate_Hs_Hp()
+# Initialize Hs, Hp, and H
+for triangle in triangles:
+    i, j, k = triangle
+    Hs[tuple(triangle)] = J[i, j] * J[j, k] * J[k, i]
+    Hp[tuple(triangle)] = -(
+        (S[i] * S[j])**((3 - J[i, j])/2) * (S[j] * S[k])**((3 - J[j, k])/2) +
+        (S[j] * S[k])**((3 - J[j, k])/2) * (S[k] * S[i])**((3 - J[k, i])/2) +
+        (S[k] * S[i])**((3 - J[k, i])/2) * (S[i] * S[j])**((3 - J[j, i])/2) - 1
+    ) / 2
 
-# Debug prints for initial values
-print("Initial Hs:", Hs)
-print("Initial Hp:", Hp)
+H = -(1 / m.comb(nb_nodes, 3)) * sum(
+        Hp[triangle] * (Hs[triangle] - 1) - (Hs[triangle] + 1) for triangle in triangles
+    ) / 2
 
-H = calculate_H()
-print(f"Initial H: {H}")
-
+# Perform the simulated annealing
 for n in range(n_iterations):
     # Save the current state
     J_old = J.copy()
@@ -77,7 +84,7 @@ for n in range(n_iterations):
             J[j, i] = J[i, j]
         # Rule 4: If one node is susceptible and the other is infected and the edge is unfriendly, nothing happens
 
-    calculate_Hs_Hp()
+    calculate_Hs_Hp(i,j)
     H = calculate_H()
     
     # Calculate the difference in H
@@ -103,3 +110,8 @@ for n in range(n_iterations):
         break
     elif n == n_iterations - 1:
         print("Local minimum reached (H > -1)")
+        
+node_colors = ["green" if S[i] == 1 else "red" for i in range(nb_nodes)]
+g.vs["color"] = node_colors
+layout = g.layout("kk")
+ig.plot(g, layout=layout, bbox=(1000, 1000), target = "graph.png")        
