@@ -89,20 +89,11 @@ while not_jammed:
         delta_H = H - H_old
         proba = random.random()
 
-        # Apply the global constraint
-#        if H < H_old:
-            # Accept the new configuration
-#            print(f"Iteration {n+1}, H: {H} (Accepted), ΔH: {delta_H}")
-#        elif H == H_old and proba < 0.5:
-            # Accept the new configuration with probability 1/2
-#            print(f"Iteration {n+1}, H: {H} (Accepted with probability 1/2), ΔH: {delta_H}")
-
         if not H < H_old and not (H == H_old and proba < 0.5):
             # Revert to the old configuration
             J = J_old
             S = S_old
             H = H_old
-    #        print(f"Iteration {n+1}, H: {H} (Reverted), ΔH: {delta_H}")
 
         # Check for global or local minimum
         if H == -1:
