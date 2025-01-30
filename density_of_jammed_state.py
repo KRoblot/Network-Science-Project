@@ -9,6 +9,7 @@ from calculate import calculate_Hs_Hp, calculate_H
 nb_nodes = 5
 n_iterations = 100
 n_calculations = 100
+proportion_ones = 0.1 
 
 
 rho0 = np.linspace(0, 0.5, 25)
@@ -24,6 +25,13 @@ def probability(rho0, alpha):
 
     for i in range(n_calculations):
         J = np.full((nb_nodes, nb_nodes), -1)
+
+        num_ones = int(proportion_ones * nb_nodes * (nb_nodes - 1) / 2)
+        indices = [(i, j) for i in range(nb_nodes) for j in range(i + 1, nb_nodes)]
+        selected_indices = random.sample(indices, num_ones)
+        for i, j in selected_indices:
+            J[i, j] = 1
+            J[j, i] = 1
 
         num_neg_ones = int(nb_nodes * rho0)
         num_ones = nb_nodes - num_neg_ones

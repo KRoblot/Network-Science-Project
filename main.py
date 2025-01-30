@@ -7,11 +7,20 @@ import random
 from calculate import calculate_Hs_Hp, calculate_H
 
 nb_nodes = 5
-rho0 = 0.8
-alpha = 0.15
-n_iterations = 100000
+rho0 = 0.375
+alpha = 0.2
+n_iterations = 3000
 
 J = np.full((nb_nodes, nb_nodes), -1)
+    
+    # Set a proportion of 1s in J while keeping the diagonal -1
+proportion_ones = 0.1  # Adjust this proportion as needed
+num_ones = int(proportion_ones * nb_nodes * (nb_nodes - 1) / 2)
+indices = [(i, j) for i in range(nb_nodes) for j in range(i + 1, nb_nodes)]
+selected_indices = random.sample(indices, num_ones)
+for i, j in selected_indices:
+    J[i, j] = 1
+    J[j, i] = 1
 
 num_neg_ones = int(nb_nodes * rho0)
 num_ones = nb_nodes - num_neg_ones
@@ -43,22 +52,23 @@ for n in range(n_iterations):
     J_old = J.copy()
     S_old = S.copy()
     H_old = H
+    
+    probability = np.random.uniform(0,1)
 
     # Randomly choose a pair connection
-    i, j = random.sample(range(nb_nodes), 2)
-    if g.are_adjacent(i, j):
-        if S[i] == S[j]:
+    i, j = random.sample(range(nb_nodes), 2) 
+    if S[i] == S[j]:
             # Rule 1: Both nodes are susceptible or infected, change the sign of the edge
-            J[i, j] = -J[i, j]
-            J[j, i] = J[i, j]
-        elif S[i] != S[j] and J[i, j] == 1:
+        J[i, j] = -J[i, j]
+        J[j, i] = J[i, j]
+    elif S[i] != S[j] and J[i, j] == 1:
             # Rule 2 and 3: One node is susceptible and the other is infected, and the edge is friendly
-            if random.random() < alpha:
+        if probability < alpha:
                 # Disease spreads
-                S[i] = S[j] = -1
+            S[i] = S[j] = -1
             # Change the sign of the edge
-            J[i, j] = -J[i, j]
-            J[j, i] = J[i, j]
+        J[i, j] = -J[i, j]
+        J[j, i] = J[i, j]
         # Rule 4: If one node is susceptible and the other is infected and the edge is unfriendly, nothing happens
 
     Hs, Hp = calculate_Hs_Hp(i, j, Hs, Hp, S, J, triangles)
@@ -66,6 +76,8 @@ for n in range(n_iterations):
     
     # Calculate the difference in H
     delta_H = H - H_old
+    
+    probability = np.random.uniform(0,1)
 
     # Apply the global constraint
     if H < H_old:
@@ -79,7 +91,7 @@ for n in range(n_iterations):
         J = J_old
         S = S_old
         H = H_old
-#        print(f"Iteration {n+1}, H: {H} (Reverted), ΔH: {delta_H}")
+        print(f"Iteration {n+1}, H: {H} (Reverted), ΔH: {delta_H}")
 
     # Check for global or local minimum
     if H == -1:
@@ -87,6 +99,18 @@ for n in range(n_iterations):
         break
     elif n == n_iterations - 1:
         print("Local minimum reached (H > -1)")
+
+# Plot the results
+plt.figure(figsize=(10, 6))
+
+for a in alpha:
+    plt.plot(np.arange(n_iterations) / 10, rho_t[str(a)] - rho0, label=f'alpha = {a}')
+
+plt.xlabel('Iteration (x10)', fontsize=14)
+plt.ylabel(r'$\rho_t - \rho_0$', fontsize=14)
+plt.legend()
+plt.title('Evolution of Infected Nodes Density Over Time', fontsize=16)
+plt.show()
         
 node_colors = ["green" if S[i] == 1 else "red" for i in range(nb_nodes)]
 g.vs["color"] = node_colors
@@ -96,4 +120,4 @@ g.es["color"] = edge_colors
 
 layout = g.layout("kk")
 
-ig.plot(g, layout=layout, bbox=(1000, 1000), target = "graph.png")       
+ig.plot(g, layout=layout, bbox=(1000, 1000), target = "graph.png")
