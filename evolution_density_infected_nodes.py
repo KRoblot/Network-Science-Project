@@ -9,7 +9,8 @@ from calculate import calculate_Hs_Hp, calculate_H
 nb_nodes = 40
 rho0 = 0.375
 alpha = np.array([0.2, 0.5, 0.8])
-n_iterations = 30000
+n_iterations = 300
+proportion_ones = 0.75
 
 rho_t = {"0.2": np.array([]), "0.5": np.array([]), "0.8": np.array([])}
 
@@ -20,7 +21,6 @@ for a in alpha:
     J = np.full((nb_nodes, nb_nodes), -1)
     
     # Set a proportion of 1s in J while keeping the diagonal -1
-    proportion_ones = 0.1  # Adjust this proportion as needed
     num_ones = int(proportion_ones * nb_nodes * (nb_nodes - 1) / 2)
     indices = [(i, j) for i in range(nb_nodes) for j in range(i + 1, nb_nodes)]
     selected_indices = random.sample(indices, num_ones)
@@ -95,10 +95,17 @@ for a in alpha:
 # Plot the results
 plt.figure(figsize=(10, 6))
 
-for a in alpha:
-    plt.plot(np.arange(n_iterations) / 100, rho_t[str(a)] - rho0, label=f'alpha = {a}')
+def moving_average(data, window_size):
+    return np.convolve(data, np.ones(window_size)/window_size, mode='valid')
 
-plt.xlabel('Iteration (x100)', fontsize=14)
+for a in alpha:
+    x = np.arange(n_iterations)
+    y = rho_t[str(a)] - rho0
+    y_smooth = moving_average(y, window_size=10)
+    x_smooth = np.arange(len(y_smooth))
+    plt.plot(x_smooth, y_smooth, label=f'alpha = {a}')
+
+plt.xlabel('Iteration', fontsize=14)
 plt.ylabel(r'$\rho_t - \rho_0$', fontsize=14)
 plt.legend()
 plt.title('Evolution of Infected Nodes Density Over Time', fontsize=16)
