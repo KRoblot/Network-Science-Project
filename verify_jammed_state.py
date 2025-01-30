@@ -4,12 +4,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import math as m
 import random
-from calculate import calculate_Hs_Hp, calculate_H
+from calculate import initialize_J, initialize_S, initialize_Hs_Hp, calculate_Hs_Hp, calculate_H
 from scipy.special import comb
 
 not_jammed = True
 
 nb_nodes = 3
+proportion_ones = 0.5
 
 n_calculations = 0
 
@@ -29,37 +30,15 @@ while not_jammed:
     
     n_iterations = 10000
 
-    J = np.full((nb_nodes, nb_nodes), -1)
-    
-    proportion_ones = 0.1  # Adjust this proportion as needed
-    num_ones = int(proportion_ones * nb_nodes * (nb_nodes - 1) / 2)
-    indices = [(i, j) for i in range(nb_nodes) for j in range(i + 1, nb_nodes)]
-    selected_indices = random.sample(indices, num_ones)
-    for i, j in selected_indices:
-        J[i, j] = 1
-        J[j, i] = 1
+    J = initialize_J(nb_nodes, proportion_ones)
 
-    num_neg_ones = int(nb_nodes * rho0)
-    num_ones = nb_nodes - num_neg_ones
-    S = np.array([-1] * num_neg_ones + [1] * num_ones)
-    np.random.shuffle(S)
+    S = initialize_S(nb_nodes, rho0)
 
     g = ig.Graph.Erdos_Renyi(n=nb_nodes, p=1)
 
     triangles = g.cliques(min=3, max=3)
 
-    Hs = {}
-    Hp = {}
-
-    # Initialize Hs, Hp, and H
-    for triangle in triangles:
-        i, j, k = triangle
-        Hs[tuple(triangle)] = - J[i, j] * J[j, k] * J[k, i]
-        Hp[tuple(triangle)] = -(
-            (S[i] * S[j])**((3 - J[i, j])/2) * (S[j] * S[k])**((3 - J[j, k])/2) +
-            (S[j] * S[k])**((3 - J[j, k])/2) * (S[k] * S[i])**((3 - J[k, i])/2) +
-            (S[k] * S[i])**((3 - J[k, i])/2) * (S[i] * S[j])**((3 - J[j, i])/2) - 1
-        ) / 2
+    Hs, Hp = initialize_Hs_Hp(triangles, J, S)
 
     H = calculate_H(nb_nodes, triangles, Hp, Hs)
 
