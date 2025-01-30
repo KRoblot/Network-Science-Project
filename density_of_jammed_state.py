@@ -97,16 +97,23 @@ def probability(rho0, alpha):
     return n_jammed / n_calculations
                 
 
+
 for i in range(len(rho0)):
     for j in range(len(alpha)):
-        print(f"Calculating probability for rho0 = {rho0[i]}, alpha = {alpha[j]}")
+        print(f"Calculating probability for rho0 = {rho0[i]}, alpha = {alpha[j]}")  
         proba[i, j] = probability(rho0[i], alpha[j])
         
 # Transpose the proba array
 proba = proba.T
 
 plt.figure(figsize=(6,4))
-contour = plt.contourf(RHO0, ALPHA, proba, levels=20, cmap="jet")
+
+# Define the levels and custom colormap
+levels = np.linspace(0, 1, 11)
+colors = ['darkblue', 'blue', 'deepskyblue', 'cyan', 'green', 'yellow', 'orange', 'red', "firebrick", 'darkred']
+cmap = plt.cm.colors.ListedColormap(colors)
+
+contour = plt.contourf(RHO0, ALPHA, proba, levels=levels, cmap=cmap)
 
 cbar = plt.colorbar(contour)
 
