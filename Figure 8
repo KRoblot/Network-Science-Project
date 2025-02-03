@@ -54,7 +54,7 @@ def simulate_combination(params):
 
     # Calculer rho_inf - rho0
     rho_inf = calculate_rho_inf(nb_nodes, S)
-    rho0 = 0.375
+    rho0 = rho_value
     return (rho_value, alpha_value, rho_inf - rho0)  # Retourne le résultat
 
 def main():
