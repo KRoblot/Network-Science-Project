@@ -5,7 +5,7 @@ import numpy as np
 def initialize_J(nb_nodes, proportion_ones):
     J = np.full((nb_nodes, nb_nodes), -1)
 
-    num_ones = int(proportion_ones * nb_nodes * (nb_nodes - 1) / 2)
+    num_ones = m.ceil(proportion_ones * nb_nodes * (nb_nodes - 1) / 2)
     indices = [(i, j) for i in range(nb_nodes) for j in range(i + 1, nb_nodes)]
     selected_indices = random.sample(indices, num_ones)
     
@@ -16,7 +16,7 @@ def initialize_J(nb_nodes, proportion_ones):
     return J
 
 def initialize_S(nb_nodes, rho0):
-    num_neg_ones = int(nb_nodes * rho0)
+    num_neg_ones = m.ceil(nb_nodes * rho0)
     num_ones = nb_nodes - num_neg_ones
     
     S = np.array([-1] * num_neg_ones + [1] * num_ones)
