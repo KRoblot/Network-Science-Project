@@ -133,9 +133,9 @@ surf = ax.plot_surface(RHO0, ALPHA, proba, cmap=cmap, norm=norm)
 
 fig.colorbar(surf, boundaries=bounds, ticks=bounds)
 
-ax.set_xlabel('rho0')
-ax.set_ylabel('alpha')
-ax.set_zlabel('rho_inf - rho0')
+ax.set_xlabel('\rho_0')
+ax.set_ylabel('\alpha')
+ax.set_zlabel(r'\rho_\inf - \rho_0')
 
 # Inversion de l’axe x (rho0)
 ax.invert_xaxis()
