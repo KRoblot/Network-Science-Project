@@ -6,26 +6,24 @@ import math as m
 import random
 from calculate import initialize_J, initialize_S, initialize_Hs_Hp, calculate_Hs_Hp, calculate_H
 
+#Parameters
 nb_nodes = 20
 rho0 = 0.375
 alpha = 0.5
 n_iterations = 30000
 proportion_ones = 0.5
 
+#Initialize J, S, g, Hs, Hp and H
 J = initialize_J(nb_nodes, proportion_ones)
-
 S = initialize_S(nb_nodes, rho0)
-
 g = ig.Graph.Erdos_Renyi(n=nb_nodes, p=1)
-
 triangles = g.cliques(min=3, max=3)
-
 Hs, Hp = initialize_Hs_Hp(triangles, J, S)
-
 H = calculate_H(nb_nodes, triangles, Hp, Hs)
 
 # Perform the simulated annealing
 for n in range(n_iterations):
+    
     # Save the current state
     J_old = J.copy()
     S_old = S.copy()
@@ -49,6 +47,7 @@ for n in range(n_iterations):
         J[j, i] = J[i, j]
         # Rule 4: If one node is susceptible and the other is infected and the edge is unfriendly, nothing happens
 
+    #Calculate Hs, Hp, H 
     Hs, Hp = calculate_Hs_Hp(i, j, Hs, Hp, S, J, triangles)
     H = calculate_H(nb_nodes, triangles, Hp, Hs)
     
@@ -77,10 +76,12 @@ for n in range(n_iterations):
         break
     elif n == n_iterations - 1:
         print("Local minimum reached (H > -1)")
-        
+
+#Define the colors of nodes depending on their status
 node_colors = ["green" if S[i] == 1 else "red" for i in range(nb_nodes)]
 g.vs["color"] = node_colors
 
+#Define the colors of edges depending on their status
 edge_colors = ["green" if J[edge.source, edge.target] == 1 else "red" for edge in g.es]
 g.es["color"] = edge_colors
 
