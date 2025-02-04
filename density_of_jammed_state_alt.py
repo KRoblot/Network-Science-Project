@@ -9,15 +9,25 @@ from calculate import initialize_J, initialize_S, initialize_Hs_Hp, calculate_Hs
 nb_nodes = 5
 n_iterations = 100
 n_calculations = 100
-proportion_ones = 0.1 
+proportion_ones = 0.75
+epsilon = 0.01
 
 
-rho0 = np.linspace(0, 0.5, 25)
-alpha = np.linspace(0, 1, 50)
+rho0 = np.linspace(0, 1, 15)
+alpha = np.linspace(0, 1, 15)
 RHO0, ALPHA = np.meshgrid(rho0, alpha)
 
-
 proba = np.zeros((len(rho0), len(alpha)))
+
+def count_connected_components(J, nb_nodes):
+    """Keep only positive edges and create a graph to count the number of connected components"""
+    g = ig.Graph(directed=False)
+    g.add_vertices(nb_nodes)
+    for i in range(nb_nodes):
+        for j in range(i + 1, nb_nodes):
+            if J[i, j] == 1:
+                g.add_edge(i, j)
+    return len(g.components().subgraphs())
 
 def probability(rho0, alpha):
     
@@ -26,63 +36,56 @@ def probability(rho0, alpha):
     for i in range(n_calculations):
         
         J = initialize_J(nb_nodes, proportion_ones)
-
         S = initialize_S(nb_nodes, rho0)
-
         g = ig.Graph.Erdos_Renyi(n=nb_nodes, p=1)
-
         triangles = g.cliques(min=3, max=3)
-
         Hs, Hp = initialize_Hs_Hp(triangles, J, S)
-
         H = calculate_H(nb_nodes, triangles, Hp, Hs)
 
-        # Perform the simulated annealing
+        # Perform the evolution with the Monte Carlo algorithm
         for n in range(n_iterations):
-            # Save the current state
             J_old = J.copy()
             S_old = S.copy()
             H_old = H
 
-            # Randomly choose a pair connection
             i, j = random.sample(range(nb_nodes), 2)
             if g.are_adjacent(i, j):
                 if S[i] == S[j]:
-                    # Rule 1: Both nodes are susceptible or infected, change the sign of the edge
                     J[i, j] = -J[i, j]
                     J[j, i] = J[i, j]
                 elif S[i] != S[j] and J[i, j] == 1:
-                    # Rule 2 and 3: One node is susceptible and the other is infected, and the edge is friendly
                     if random.random() < alpha:
-                        # Disease spreads
                         S[i] = S[j] = -1
-                    # Change the sign of the edge
                     J[i, j] = -J[i, j]
                     J[j, i] = J[i, j]
-                # Rule 4: If one node is susceptible and the other is infected and the edge is unfriendly, nothing happens
 
             Hs, Hp = calculate_Hs_Hp(i, j, Hs, Hp, S, J, triangles)
             H = calculate_H(nb_nodes, triangles, Hp, Hs)
             
-            # Calculate the difference in H
             delta_H = H - H_old
-
             p = random.random()
             
-            if not H < H_old and not (H == H_old and p < 0.5):
-                # Revert to the old configuration
+            if H < H_old:
+                pass
+            elif (abs(H-H_old)<=epsilon):
+
+                if (p < 0.5):
+                    pass
+            else:
                 J = J_old
                 S = S_old
                 H = H_old
-        #        print(f"Iteration {n+1}, H: {H} (Reverted), ΔH: {delta_H}")
 
-            # Check for global or local minimum
+            # New loop condition: if the graph has more than one connected component, break
+            if count_connected_components(J, nb_nodes) >= 2:
+                n_jammed += 1
+                break
             if H == -1:
                 break
-            elif n == n_iterations - 1:
-                n_jammed += 1
+
     
     return n_jammed / n_calculations
+
                 
 
 
