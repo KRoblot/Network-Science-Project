@@ -20,7 +20,7 @@ RHO0, ALPHA = np.meshgrid(rho0, alpha)
 proba = np.zeros((len(rho0), len(alpha)))
 
 def count_connected_components(J, nb_nodes):
-    """Compte le nombre de composantes connexes en ne gardant que les arêtes J(i,j) = +1"""
+    """Keep only positive edges and create a graph to count the number of connected components"""
     g = ig.Graph(directed=False)
     g.add_vertices(nb_nodes)
     for i in range(nb_nodes):
@@ -42,7 +42,7 @@ def probability(rho0, alpha):
         Hs, Hp = initialize_Hs_Hp(triangles, J, S)
         H = calculate_H(nb_nodes, triangles, Hp, Hs)
 
-        # Perform the simulated annealing
+        # Perform the evolution with the Monte Carlo algorithm
         for n in range(n_iterations):
             J_old = J.copy()
             S_old = S.copy()
@@ -76,7 +76,7 @@ def probability(rho0, alpha):
                 S = S_old
                 H = H_old
 
-            # Nouvelle condition d'arrêt : vérification des composantes connexes
+            # New loop condition: if the graph has more than one connected component, break
             if count_connected_components(J, nb_nodes) >= 2:
                 n_jammed += 1
                 break
