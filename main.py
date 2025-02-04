@@ -6,7 +6,7 @@ import math as m
 import random
 from calculate import initialize_J, initialize_S, initialize_Hs_Hp, calculate_Hs_Hp, calculate_H
 
-nb_nodes = 15
+nb_nodes = 20
 rho0 = 0.375
 alpha = 0.5
 n_iterations = 30000
