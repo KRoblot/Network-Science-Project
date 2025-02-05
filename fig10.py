@@ -12,12 +12,21 @@ nb_nodes = 20
 
 proportion_ones = np.linspace(0, 1, 100)
 
-n_iterations = 10000
-n_calculations = 20
+n_iterations = 1000
+n_calculations = 10
 
 proportion = np.zeros_like(proportion_ones)
 
 def calculate_proportion(proportion_ones):
+    
+    """Calculate the fraction of nodes that become infected at the steady state
+
+    Args:
+        proportion_ones (float): proportion of friendly edges
+        
+    Returns:
+        float: fraction of nodes that become infected at the steady state
+    """
     
     rho_inf = 0
     
@@ -84,7 +93,8 @@ def calculate_proportion(proportion_ones):
 #        print(f"Iteration {n+1}, H: {H} (Reverted), ΔH: {delta_H}")
 
             # Check for global or local minimum
-            if H == -1 or n == n_iterations - 1 or n_same == 250:
+#            if H == -1 or n == n_iterations - 1 or n_same == 300:
+            if H == -1 or n == n_iterations - 1:
                 break
 #            elif n == n_iterations - 1:
 #                break
@@ -102,7 +112,7 @@ for i in range(len(proportion_ones)):
     print(proportion[i])
         
 plt.plot(proportion_ones, proportion)
-plt.xlabel("Initial proportion of infected nodes (%)")
+plt.xlabel("Initial proportion of friendly edges (%)")
 plt.ylabel("Fraction of nodes that become infected at the steady state (%)")
-plt.title("Fraction of nodes that become infected at the steady state as a function of the initial proportion of infected nodes")
+plt.title("Fraction of nodes that become infected at the steady state as a function of the initial proportion of friendly edges")
 plt.show()

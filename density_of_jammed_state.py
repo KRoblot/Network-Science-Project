@@ -19,7 +19,17 @@ RHO0, ALPHA = np.meshgrid(rho0, alpha)
 
 proba = np.zeros((len(rho0), len(alpha)))                                                  # initialization of proba : probability for each rho0 and each alpha to have a jammed state
 
-def probability(rho0, alpha):                                                              # define function probability, giving the probability to reach a jammed state with given alpha and rho0
+def probability(rho0, alpha):  
+
+    """Calculate the probability to reach a jammed state for a given rho0 and alpha
+
+    Args:
+        rho0 (float): proportion of infected nodes
+        alpha (float): probability of disease spreading
+
+    Returns:
+        float: probability to reach a jammed state
+    """
     
     n_jammed = 0                                                                           # at first, no jammed state has been reached
 
