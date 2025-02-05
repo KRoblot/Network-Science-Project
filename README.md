@@ -6,9 +6,9 @@
 This project aims to **critically verify** the claims presented in the paper:  
 📄 *"Epidemic Spreading on Evolving Signed Networks"* (Phys. Rev. E 95, 022314, 2017).  
 
-The paper explores how **social relationships evolve in response to an epidemic**, using a **signed network model** where links can be either **friendly (+1)** or **hostile (-1)**. Our goal is to **reproduce the key results, analyze their validity, and test the robustness of their conclusions** under different conditions.  
+The paper explores how **social relationships evolve in response to an epidemic**, using a **signed network model** where links can be either **friendly (+1)** or **hostile (-1)**. Our goal is to **reproduce the key results, analyze their validity, and test the robustness of their conclusions** under different conditions with a critical point of view.  
 
-## **🎯 Objectives**  
+## **🎯 Objectives** 
 ✅ Reproduce the **figures and key numerical results** from the paper.  
 ✅ Test the **impact of different network structures** (beyond complete graphs).  
 ✅ Analyze the **role of key parameters** (infection rate \( \alpha \), initial infected proportion \( \rho_0 \), etc.).  
@@ -17,21 +17,24 @@ The paper explores how **social relationships evolve in response to an epidemic*
 
 ## **📂 Repository Structure**  
 ```
-📦 Network-Science-Project  
-├── 📜 README.md                # Project documentation  
-├── 📂 src                      # Main source code  
-│   ├── epidemic_model.py       # Implementation of the SI model on signed networks  
-│   ├── monte_carlo_sim.py      # Monte Carlo simulations for network evolution  
-│   ├── figure_reproduction.py  # Code to reproduce figures from the paper  
-│   ├── analysis.py             # Statistical analysis and critical evaluation  
-│   ├── utils.py                # Helper functions (e.g., graph generation, energy calculation)  
-│   ├── calculate.py            # Core functions for energy and network dynamics  
-├── 📂 data                     # Simulation results and precomputed datasets  
-├── 📂 notebooks                # Jupyter notebooks for exploratory analysis  
-├── 📂 figures                  # Generated plots and comparison with the paper  
-├── 📜 requirements.txt         # Dependencies list  
-└── 📜 LICENSE                  # License information  
-```  
+📦 Network-Science-Project
+├── 📄requirements.txt
+├── 📜 README.md                    # Project documentation  
+├── 📂 __pycache__/                  # Compiled Python cache files  
+├── 📜 main.py                       # Main script to run simulations  
+├── 📜 calculate.py                  # Core functions for network calculations  
+├── 📜 verify_jammed_state.py        # Script to verify the existence of jammed states  
+├── 📜 density_of_jammed_state.py    # Computes the density of jammed states  
+├── 📜 density_of_jammed_state_alt.py# Alternative method for jammed state density  
+├── 📜 evolution_density_infected_nodes.py  # Tracks infected nodes over time  
+├── 📜 fig8.py                        # Script to reproduce Figure 8 from the paper  
+├── 📜 fig10.py                       # Script to reproduce Figure 10 from the paper  
+├── 📜 'Figure 8.py'                  # Old script for Figure 8  
+├── 📂 figures/                       # Directory for generated figures  
+│   ├── density_of_jammed_state.png   # Generated density of jammed states  
+│   ├── evolution_of_infected_nodes.png # Evolution of infected nodes  
+│   ├── 3dfigure.png                  # 3D visualization  
+│   ├── graph.png                      # Graph representation  
 
 ## **📊 Methodology**  
 1. **Network Initialization**  
@@ -60,16 +63,13 @@ pip install -r requirements.txt
 ```
 ### **2️⃣ Run the Main Simulations**  
 ```bash
-python src/monte_carlo_sim.py
+python src/density_of_jammed_state.py
+python src/density_of_jammed_state_alt.py
+python src/evolution_density_infected_nodes.py
+python src/fig8.py
+python src/fig10.py
 ```
-### **3️⃣ Reproduce Figures from the Paper**  
-```bash
-python src/figure_reproduction.py
-```
-### **4️⃣ Explore Results in Jupyter Notebook**  
-```bash
-jupyter notebook notebooks/analysis.ipynb
-```
+
 
 ## **📈 Expected Outcomes & Open Questions**  
 🔹 Does **social tension minimization** actually lead to jammed states as described?  
@@ -79,10 +79,30 @@ jupyter notebook notebooks/analysis.ipynb
 🔹 Can we **bridge the gap** between this theoretical model and real-world epidemic data?  
 
 ## **🛠 Contributors**  
-- **[Your Name]** - Main development & analysis  
-- **[Your Collaborators]** - Contributions in simulations, theory, and review  
-- **[Supervisor/Professor, if applicable]**  
+- **Koské Roblot and Debbah Adam** - Main development & analysis  
+- **Sirot Marine and Wintrebert Baptiste** - Contributions in simulations, theory, and review  
+- **Bongiorno Christian** - Supervisor
 
-## **📜 License**  
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.  
+This project is licensed under the **MIT License**.  
 
+MIT License  
+
+Copyright (c) 2025 Koské Roblot, Debbah Adam, Sirot Marine, Wintrebert Baptiste 
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.  
