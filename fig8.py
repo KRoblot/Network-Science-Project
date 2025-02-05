@@ -21,6 +21,16 @@ proba = np.zeros((len(rho0), len(alpha)))
 
 def probability(rho0, alpha):
     
+    """Calculate the probability to reach a jammed state for a given rho0 and alpha
+
+    Args:
+        rho0 (float): proportion of infected nodes
+        alpha (float): probability of disease spreading
+
+    Returns:
+        float: probability to reach a jammed state
+    """
+    
     rho_inf = 0
     
     for i in range(n_calculations):
