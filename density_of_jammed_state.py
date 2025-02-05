@@ -19,23 +19,23 @@ RHO0, ALPHA = np.meshgrid(rho0, alpha)
 
 proba = np.zeros((len(rho0), len(alpha)))                                                  # initialization of proba : probability for each rho0 and each alpha to have a jammed state
 
-def probability(rho0, alpha):
+def probability(rho0, alpha):                                                              # define function probability, giving the probability to reach a jammed state with given alpha and rho0
     
-    n_jammed = 0
+    n_jammed = 0                                                                           # at first, no jammed state has been reached
 
     for i in range(n_calculations):
         
-        J = initialize_J(nb_nodes, proportion_ones)
+        J = initialize_J(nb_nodes, proportion_ones)                                        # initialization of J and S with the imported functions
 
         S = initialize_S(nb_nodes, rho0)
 
-        g = ig.Graph.Erdos_Renyi(n=nb_nodes, p=1)
+        g = ig.Graph.Erdos_Renyi(n=nb_nodes, p=1)                                           # initialization of g : graph with nb_nodes nodes, each pair of nodes is connected by an edge 
 
-        triangles = g.cliques(min=3, max=3)
+        triangles = g.cliques(min=3, max=3)                                                 # triangles contains all the triples
 
-        Hs, Hp = initialize_Hs_Hp(triangles, J, S)
-
-        H = calculate_H(nb_nodes, triangles, Hp, Hs)
+        Hs, Hp = initialize_Hs_Hp(triangles, J, S)                                          # initialization of Hs and Hp
+ 
+        H = calculate_H(nb_nodes, triangles, Hp, Hs)                                        # calculate energy H 
 
         # Perform the simulated annealing
         for n in range(n_iterations):
