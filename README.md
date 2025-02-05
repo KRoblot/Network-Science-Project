@@ -19,22 +19,23 @@ The paper explores how **social relationships evolve in response to an epidemic*
 ```
 📦 Network-Science-Project
 ├── 📄requirements.txt
-├── 📜 README.md                    # Project documentation  
-├── 📂 __pycache__/                  # Compiled Python cache files  
-├── 📜 main.py                       # Main script to run simulations  
-├── 📜 calculate.py                  # Core functions for network calculations  
-├── 📜 verify_jammed_state.py        # Script to verify the existence of jammed states  
-├── 📜 density_of_jammed_state.py    # Computes the density of jammed states  
-├── 📜 density_of_jammed_state_alt.py# Alternative method for jammed state density  
+├── 📜 README.md                            # Project documentation  
+├── 📂 __pycache__/                         # Compiled Python cache files  
+├── 📜 main.py                              # Script to generate a graph 
+├── 📜 calculate.py                         # Core functions for network calculations  
+├── 📜 verify_jammed_state.py               # Script to verify the existence of jammed states  
+├── 📜 density_of_jammed_state.py           # Computes the density of jammed states  
+├── 📜 density_of_jammed_state_alt.py       # Alternative method for jammed state density  
 ├── 📜 evolution_density_infected_nodes.py  # Tracks infected nodes over time  
-├── 📜 fig8.py                        # Script to reproduce Figure 8 from the paper  
-├── 📜 fig10.py                       # Script to reproduce Figure 10 from the paper  
-├── 📜 'Figure 8.py'                  # Old script for Figure 8  
-├── 📂 figures/                       # Directory for generated figures  
-│   ├── density_of_jammed_state.png   # Generated density of jammed states  
-│   ├── evolution_of_infected_nodes.png # Evolution of infected nodes  
-│   ├── 3dfigure.png                  # 3D visualization  
-│   ├── graph.png                      # Graph representation  
+├── 📜 fig8.py                              # Script to reproduce Figure 8 from the paper  
+├── 📜 fig10.py                             # Script to reproduce Figure 10 from the paper  
+├── 📜 'Figure 8.py'                        # Old script for Figure 8  
+├── 📂 figures/                             # Directory for generated figures
+│   ├── 3dfigure.png                         # 3D visualization 
+│   ├── density_of_jammed_state.png          # Generated density of jammed states  
+│   ├── evolution_of_infected_nodes.png      # Evolution of infected nodes  
+│   ├── fig10.png                            # Generated figure 10  
+│   ├── graph.png                            # Graph representation  
 
 ## **📊 Methodology**  
 1. **Network Initialization**  
