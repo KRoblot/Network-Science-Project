@@ -6,18 +6,18 @@ import math as m
 import random
 from calculate import initialize_J, initialize_S, initialize_Hs_Hp, calculate_Hs_Hp, calculate_H
 
-nb_nodes = 5
+nb_nodes = 5                                                                              # parameters
 n_iterations = 100
 n_calculations = 100
 proportion_ones = 0.1 
 
 
-rho0 = np.linspace(0, 0.5, 25)
+rho0 = np.linspace(0, 0.5, 25)                                                            # numpy array of rho0 and alpha                                                          
 alpha = np.linspace(0, 1, 50)
 RHO0, ALPHA = np.meshgrid(rho0, alpha)
 
 
-proba = np.zeros((len(rho0), len(alpha)))
+proba = np.zeros((len(rho0), len(alpha)))                                                  # initialization of proba : probability for each rho0 and each alpha to have a jammed state
 
 def probability(rho0, alpha):
     
