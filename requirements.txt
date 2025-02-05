@@ -1,0 +1,9 @@
+numpy
+pandas
+matplotlib
+igraph
+networkx
+random
+scipy
+math
+mpl_toolkits.mplot3d
